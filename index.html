@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <menu>
+            <profile>
+                <greeting>
+                    <h1>Good morning, Name!</h1>
+                </greeting>
+                <project>
+                    <p>Project number 1</p>
+                </project>
+            </profile>
+            <actions>
+                <form id="taskForm">
+                    <div class="task-form-panel">
+                        <button type="button" id="closeTaskForm" class="close-form">✕</button>
+                        <input name="title" placeholder="Title" />
+                        <textarea name="description"></textarea>
+                        <button type="submit">Create</button>
+                    </div>
+                </form>
+                <button id="addTaskBtn" class="addTask">
+                    <span class="material-symbols-outlined">edit</span>
+                </button>
+                <button id="saveBtn">
+                    <span class="material-symbols-outlined">save</span>
+                </button>
+            </actions>
+        </menu>
+        <board>
+            <todo>
+                <section id="todo-section">
+                    <div class="column-header">todo</div>
+                    <div class="column-cards"></div>
+                </section>
+            </todo>
+            <inprogress>
+                <section id="in-progress-section">
+                    <div class="column-header">in-progress</div>
+                    <div class="column-cards"></div>
+                </section>
+            </inprogress>
+            <review>
+                <section id="review-section">
+                    <div class="column-header">review</div>
+                    <div class="column-cards"></div>
+                </section>
+            </review>
+            <done>
+                <section id="done-section">
+                    <div class="column-header">done</div>
+                    <div class="column-cards"></div>
+                </section>
+            </done>
+        </board>
+        <script src="dist/app.js" type="module"></script>
+    </body>
+</html>
