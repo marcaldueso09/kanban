@@ -190,35 +190,59 @@ done .column-cards{
 
 .task-card {
     background: #928e8e;
-    border-radius: 8px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    border-radius: 10px;
     padding: 0.75rem;
     position: relative;
     display: flex;
     flex-direction: column;
-    border-bottom: 6px solid black;
+    border: 3.5px solid black;
+    box-shadow: 3px 3px black;
+    transition: transform 0.2s ease-out, 
+                box-shadow 0.2s ease-out, 
+                border-color 0.15s ease-out;
 
     > span{
         position: absolute;
         top: .25rem;
         right: .5rem;
+        font-weight: 700;
     }
 }
 
-todo .task-card {
-    border-bottom-color: var(--todo-border, #3b82f6);
+@keyframes pop {
+    0% {box-shadow: 3px 3px 0 0 var(--pop-color);}
+    50%{ box-shadow: 5px 6.7px 0 0 var(--pop-color);}
+    100%{ box-shadow: 3px 3px 0 0 var(--pop-color);}
+
 }
 
-inprogress .task-card {
-    border-bottom-color: var(--inprog-border, #f59e0b);
+todo .task-card:hover{
+    
+    box-shadow: 3px 3px var(--todo-border);
+    border-color: var(--todo-border);
+    --pop-color: var(--todo-border);
+    animation: pop .67s ease-in;
 }
 
-review .task-card {
-    border-bottom-color: var(--review-border, #a855f7);
+inprogress .task-card:hover {
+    box-shadow: 3px 3px var(--inprog-border);
+    border-color: var(--inprog-border);
+    --pop-color: var(--inprog-border);
+    animation: pop .67s ease-in;
 }
 
-done .task-card {
-    border-bottom-color: var(--done-border, #22c55e);
+review .task-card:hover {
+   box-shadow: 3px 3px var(--review-border);
+    border-color: var(--review-border);
+    --pop-color: var(--review-border);
+    animation: pop .67s ease-in;
+}
+
+done .task-card:hover {
+   box-shadow: 3px 3px var(--done-border);
+    border-color: var(--done-border);
+    --pop-color: var(--done-border);
+    animation: pop .67s ease-in;
 }
 
 .task-options-menu {
