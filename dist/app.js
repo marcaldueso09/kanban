@@ -1,3 +1,5 @@
+export const ALL_STATUSES = ['todo', 'in-progress', 'review', 'done'];
+// type ColumnStatus = 'todo' | 'in-progress' | 'review' | 'done';
 class Task {
     id;
     title;
@@ -57,10 +59,44 @@ class KanbanBoard {
         const template = document.getElementById('task-card-template');
         const cloneFragment = template.content.cloneNode(true);
         const card = cloneFragment.querySelector('.task-card');
+        card.setAttribute('data-status', task.status);
         const moreBtn = card.querySelector('.more');
         const menu = card.querySelector('.task-options-menu');
         const editBtn = card.querySelector('.edit-opt-btn');
         const deleteBtn = card.querySelector('.delete-opt-btn');
+        const moveBtn = card.querySelector('.move-opt-btn');
+        const moveContainer = card.querySelector('.move-choices-container');
+        const optionsMenu = card.querySelector('.task-options-menu');
+        moveBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!moveContainer.classList.contains("hidden")) {
+                moveContainer.classList.add("hidden");
+                return;
+            }
+            moveContainer.innerHTML = "";
+            const currentStatus = card.getAttribute('data-status');
+            console.log(`3. Card's current status is: ${currentStatus}`);
+            ALL_STATUSES.forEach((status) => {
+                if (status !== currentStatus) {
+                    const btn = document.createElement('button');
+                    btn.className = 'move-choice-btn';
+                    const formattedText = status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    btn.textContent = `→ ${formattedText}`;
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const targetColumn = document.querySelector(`.column-cards[data-status="${status}"]`);
+                        if (targetColumn) {
+                            targetColumn.appendChild(card);
+                            card.setAttribute('data-status', status);
+                        }
+                        optionsMenu.classList.add('hidden');
+                        moveContainer.classList.add('hidden');
+                    });
+                    moveContainer.appendChild(btn);
+                }
+            });
+            moveContainer.classList.remove('hidden');
+        });
         moreBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             menu.classList.toggle('hidden');
@@ -209,5 +245,4 @@ saveBtn?.addEventListener('click', () => {
         console.warn('export failed', e);
     }
 });
-export {};
 //# sourceMappingURL=app.js.map
