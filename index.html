@@ -7,55 +7,61 @@
         <menu>
             <profile>
                 <greeting>
-                    <h1>Good morning, Name!</h1>
+                    <h1>Kanban Board</h1>
                 </greeting>
                 <project>
-                    <p>Project number 1</p>
+                    <h4>AskMe - ISMS Task Board</h4>
                 </project>
             </profile>
             <actions>
                 <form id="taskForm">
                     <div class="task-form-panel">
-                        <button type="button" id="closeTaskForm" class="close-form">✕</button>
                         <input name="title" placeholder="Title" />
                         <textarea name="description"></textarea>
                         <button type="submit">Create</button>
                     </div>
                 </form>
-                <button id="addTaskBtn" class="addTask">
-                    <span class="material-symbols-outlined">edit</span>
-                </button>
-                <button id="saveBtn">
-                    <span class="material-symbols-outlined">save</span>
-                </button>
+                <span class="material-symbols-outlined button addTask" id="addTaskBtn">add</span>
+                <span class="material-symbols-outlined button" id="saveBtn">save</span>
             </actions>
         </menu>
         <board>
             <todo>
-                <section id="todo-section">
+                <section id="todo-section" >
                     <div class="column-header">todo</div>
-                    <div class="column-cards"></div>
+                    <div class="column-cards" data-status="todo"></div>
                 </section>
             </todo>
             <inprogress>
-                <section id="in-progress-section">
+                <section id="in-progress-section" >
                     <div class="column-header">in-progress</div>
-                    <div class="column-cards"></div>
+                    <div class="column-cards" data-status="in-progress"></div>
                 </section>
             </inprogress>
             <review>
-                <section id="review-section">
+                <section id="review-section" >
                     <div class="column-header">review</div>
-                    <div class="column-cards"></div>
+                    <div class="column-cards" data-status="review"></div>
                 </section>
             </review>
             <done>
-                <section id="done-section">
+                <section id="done-section" >
                     <div class="column-header">done</div>
-                    <div class="column-cards"></div>
+                    <div class="column-cards" data-status="done"></div>
                 </section>
             </done>
         </board>
+        <template id="task-card-template">
+            <div class="task-card draggable" draggable="true">
+                <span class="material-symbols-outlined button more">more_horiz</span>
+                <div class="task-options-menu hidden">
+                    <button class="edit-opt-btn">Edit</button>
+                    <button class="delete-opt-btn">Delete</button>
+                </div>
+                <h3 class="task-title"></h3>
+                <p class="task-desc"></p>
+            </div>
+        </template>
         <script src="dist/app.js" type="module"></script>
     </body>
 </html>

@@ -15,6 +15,7 @@ class KanbanBoard {
     constructor() {
         this.loadFromLocalStorage();
         this.renderBoard();
+        this.setupDropZones();
     }
     addTask(title, description) {
         if (!title) {
@@ -53,13 +54,71 @@ class KanbanBoard {
         this.renderBoard();
     }
     renderTask(task) {
-        const card = document.createElement('div');
-        card.className = 'task-card';
-        card.innerHTML = `
-            <h3>${task.title}</h3>
-            <p>${task.description}</p>
-        `;
+        const template = document.getElementById('task-card-template');
+        const cloneFragment = template.content.cloneNode(true);
+        const card = cloneFragment.querySelector('.task-card');
+        const moreBtn = card.querySelector('.more');
+        const menu = card.querySelector('.task-options-menu');
+        const editBtn = card.querySelector('.edit-opt-btn');
+        const deleteBtn = card.querySelector('.delete-opt-btn');
+        moreBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menu.classList.toggle('hidden');
+        });
+        document.addEventListener('click', () => menu.classList.add('hidden'));
+        deleteBtn.addEventListener('click', () => {
+            this.deleteTaskById(task.id);
+        });
+        editBtn.addEventListener('click', () => {
+            const newTitle = prompt("Edit title", task.title);
+            const newDesc = prompt("Edit description", task.description);
+            if (newTitle !== null && newDesc !== null) {
+                this.updateTaskDetails(task.id, { title: newTitle, description: newDesc });
+                this.renderBoard();
+            }
+        });
+        card.id = `task-${task.id}`;
+        card.querySelector('.task-title').textContent = task.title;
+        card.querySelector('.task-desc').textContent = task.description;
+        card.addEventListener('dragstart', (event) => {
+            if (event.dataTransfer) {
+                event.dataTransfer.setData('text/plain', card.id);
+                event.dataTransfer.effectAllowed = 'move';
+            }
+            card.classList.add('dragging');
+        });
+        card.addEventListener('dragend', () => {
+            card.classList.remove('dragging');
+        });
         return card;
+    }
+    setupDropZones() {
+        const columns = document.querySelectorAll('.column-cards, [id$="-section"]');
+        columns.forEach(column => {
+            column.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                if (event.dataTransfer) {
+                    event.dataTransfer.dropEffect = 'move';
+                }
+                column.classList.add('column-hover');
+            });
+            column.addEventListener('dragleave', () => {
+                column.classList.remove('column-hover');
+            });
+            column.addEventListener('drop', (event) => {
+                event.preventDefault();
+                column.classList.remove('column-hover');
+                if (event.dataTransfer) {
+                    const draggedId = event.dataTransfer.getData('text/plain');
+                    const targetContainer = event.target.closest('.column-cards') || column;
+                    const newStatus = targetContainer.dataset.status;
+                    const taskId = parseInt(draggedId.replace('task-', ''), 10);
+                    if (newStatus && !isNaN(taskId)) {
+                        this.updateTaskStatus(taskId, newStatus);
+                    }
+                }
+            });
+        });
     }
     saveToLocalStorage() {
         try {
@@ -104,20 +163,16 @@ class KanbanBoard {
 const addTaskBtn = document.getElementById('addTaskBtn');
 const taskForm = document.getElementById('taskForm');
 const saveBtn = document.getElementById('saveBtn');
-const closeTaskFormBtn = document.getElementById('closeTaskForm');
 const board = new KanbanBoard();
-addTaskBtn?.addEventListener('click', () => {
-    if (taskForm instanceof HTMLElement) {
+addTaskBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (taskForm) {
         taskForm.classList.toggle('visible');
+        console.log("Form classes after span click:", taskForm.className);
     }
 });
-closeTaskFormBtn?.addEventListener('click', () => {
-    if (taskForm instanceof HTMLElement) {
-        taskForm.classList.remove('visible');
-    }
-});
-closeTaskFormBtn?.addEventListener('click', () => {
-    if (taskForm instanceof HTMLElement) {
+taskForm?.addEventListener('click', (e) => {
+    if (e.target === taskForm) {
         taskForm.classList.remove('visible');
     }
 });
